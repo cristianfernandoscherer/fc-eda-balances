@@ -1,0 +1,31 @@
+services:
+  goapp-balance: 
+    build: .
+    platform: linux/amd64
+    volumes:
+      - .:/app
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+
+  mysql-balance:
+    image: mysql:5.7.16
+    platform: linux/amd64
+    container_name: mysqlbalance
+    command: [--ignore-db-dir=lost+found]
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: balance
+      MYSQL_DATABASE: balance
+      MYSQL_PASSWORD: balance
+    ports:
+      - 3308:3306
+    volumes:
+      - .docker/mysql:/var/lib/mysql
+    networks:
+      - app-network  
+      
+networks:
+  app-network:
+    external: true
